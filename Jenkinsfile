@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'maven:3.8.6-openjdk-11'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
     
     environment {
         SONAR_TOKEN = credentials('sonar-token')
@@ -16,7 +21,11 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'ant clean compile jar'
+                    sh '''
+                        javac -d build/classes -cp . src/chatapplication/*.java
+                        mkdir -p dist
+                        jar cf dist/lanchatapp.jar -C build/classes .
+                    '''
                 }
             }
         }
