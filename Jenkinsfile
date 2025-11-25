@@ -1,8 +1,10 @@
 pipeline {
     agent any
     
-    tools {
-        jdk 'JDK11'
+    agent {
+        docker {
+            image 'openjdk:11-jdk'
+        }
     }
     
     environment {
