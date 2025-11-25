@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.8.6-openjdk-11'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
     
     environment {
         SONAR_TOKEN = credentials('sonar-token')
@@ -22,7 +17,9 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        javac -d build/classes -cp . src/chatapplication/*.java
+                        mkdir -p build/classes
+                        find src -name "*.java" > sources.txt
+                        javac -d build/classes @sources.txt
                         mkdir -p dist
                         jar cf dist/lanchatapp.jar -C build/classes .
                     '''
