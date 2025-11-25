@@ -31,7 +31,10 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        sonar-scanner \
+                        docker run --rm \
+                        -v $(pwd):/usr/src \
+                        --network sdp_devops-network \
+                        sonarsource/sonar-scanner-cli:latest \
                         -Dsonar.projectKey=lanchatapp \
                         -Dsonar.sources=src \
                         -Dsonar.host.url=${SONAR_HOST_URL} \
